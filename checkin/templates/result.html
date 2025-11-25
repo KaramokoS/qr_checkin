@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+{% if success %}
+  <body class="green">
+    <div style="text-align:center; padding:80px;">
+      <div style="font-size:80px">✓</div>
+      <h2>{{ message }}</h2>
+      <p>{{ attendee.uid }}</p>
+      <button class="btn" onclick="window.location.href='{% url 'scan_qr' session.id %}'">Scanner un autre QR</button>
+    </div>
+  </body>
+{% else %}
+  <body class="red">
+    <div style="text-align:center; padding:80px;">
+      <div style="font-size:80px">✖</div>
+      <h2>{{ message }}</h2>
+      {% if checkin_date %}
+        <p>Déjà validé le : <strong>{{ checkin_date|date:"d/m/Y H:i:s" }}</strong></p>
+      {% endif %}
+      <button class="btn" onclick="window.location.href='{% url 'scan_qr' session.id %}'">Revenir</button>
+    </div>
+  </body>
+{% endif %}
+{% endblock %}

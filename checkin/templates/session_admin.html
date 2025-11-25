@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Tableau — {{ session.name }}</h1>
+
+<p>
+  <a class="btn" href="{% url 'export_session_csv' session.id %}">Exporter CSV</a>
+  <form method="post" action="{% url 'close_session' session.id %}" style="display:inline">
+    {% csrf_token %}
+    <button class="btn" type="submit">{% if session.is_closed %}Session fermée{% else %}Clôturer la session{% endif %}</button>
+  </form>
+</p>
+
+<table border="1" width="100%" id="attendees-table">
+  <thead>
+    <tr><th>UID</th><th>QR</th><th>Checked</th><th>Checkin date</th></tr>
+  </thead>
+  <tbody>
+    {% for a in attendees %}
+      <tr data-qr="{{ a.qr_code }}">
+        <td>{{ a.uid }}</td>
+        <td>{{ a.qr_code }}</td>
+        <td class="checked">{% if a.checked_in %}✓{% else %}—{% endif %}</td>
+        <td class="date">{% if a.checkin_date %}{{ a.checkin_date|date:"d/m/Y H:i:s" }}{% endif %}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+<hr/>
+<h3>Uploader un CSV</h3>
+<form id="csv-form" enctype="multipart/form-data">
+  {% csrf_token %}
+  <input type="file" name="csv_file" accept=".csv" required>
+  <input type="hidden" name="session_id" value="{{ session.id }}">
+  <button type="submit">Importer via AJAX</button>
+</form>
+
+<div id="progress" style="display:none; width:300px; border:1px solid #ccc;">
+  <div id="bar" style="width:0%; height:20px; background:#4caf50; color:white; text-align:center">0%</div>
+</div>
+<script>
+document.getElementById('csv-form').addEventListener('submit', function(e){
+  e.preventDefault();
+  const form = e.currentTarget;
+  const fd = new FormData(form);
+  const xhr = new XMLHttpRequest();
+  xhr.open('POST', "{% url 'upload_csv_ajax' %}");
+  xhr.setRequestHeader('X-CSRFToken', '{{ csrf_token }}');
+  document.getElementById('progress').style.display = 'block';
+  xhr.upload.onprogress = function(ev){
+    if(ev.lengthComputable) {
+      const percent = Math.round(ev.loaded/ev.total*100);
+      document.getElementById('bar').style.width = percent + '%';
+      document.getElementById('bar').textContent = percent + '%';
+    }
+  };
+  xhr.onload = function() {
+    if(xhr.status === 200) {
+      alert('Import terminé');
+      location.reload();
+    } else {
+      alert('Erreur: ' + xhr.responseText);
+    }
+  };
+  xhr.send(fd);
+});
+</script>
+
+
+<script>
+const sessionId = "{{ session.id }}";
+const loc = window.location;
+const ws_scheme = loc.protocol === "https:" ? "wss" : "ws";
+const ws_path = ws_scheme + "://" + loc.host + "/ws/session/" + sessionId + "/";
+const socket = new WebSocket(ws_path);
+
+socket.onopen = function() {
+  console.log("WS connected");
+};
+
+socket.onmessage = function(evt) {
+  const data = JSON.parse(evt.data);
+  if(data.type === 'attendee_checked_in') {
+    const payload = data.data;
+    // payload contains attendee info; update row or add if not exists
+    const qr = payload.qr_code;
+    const row = document.querySelector(`tr[data-qr='${qr}']`);
+    const dateStr = new Date(payload.checkin_date).toLocaleString();
+    if(row) {
+      row.querySelector('.checked').textContent = '✓';
+      row.querySelector('.date').textContent = dateStr;
+    } else {
+      // prepend new row
+      const tbody = document.querySelector('#attendees-table tbody');
+      const tr = document.createElement('tr');
+      tr.setAttribute('data-qr', qr);
+      tr.innerHTML = `<td>${payload.uid}</td><td>${qr}</td><td class="checked">✓</td><td class="date">${dateStr}</td>`;
+      tbody.prepend(tr);
+    }
+  } else if(data.type === 'session_closed') {
+    alert("Session fermée.");
+  }
+};
+
+socket.onclose = function() {
+  console.log("WS closed");
+};
+</script>
+
+
+{% endblock %}

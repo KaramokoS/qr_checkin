@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Créer une session</h1>
+
+<form method="POST" enctype="multipart/form-data">
+  {% csrf_token %}
+  <label>Nom de la session: <input type="text" name="name" /></label><br/><br/>
+  <label>Mot de passe (optionnel): <input type="text" name="password" /></label><br/><br/>
+  <label>CSV (optionnel): <input type="file" name="csv_file" accept=".csv" /></label><br/><br/>
+  <button type="submit" class="btn">Créer</button>
+</form>
+<hr/>
+{% endblock %}

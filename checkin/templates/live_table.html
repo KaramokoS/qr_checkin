@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Tableau Live</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        th {
+            background: #f2f2f2;
+        }
+        .ok {
+            background: #c5f7c5;
+        }
+        .no {
+            background: #f7c5c5;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Tableau Live - Session : {{ session.name }}</h1>
+
+    <button class="btn" onclick="window.location.href='{% url 'scan_qr' session.id %}'">
+        Retour
+    </button>
+
+    <table id="attendee-table">
+        <thead>
+            <tr>
+                <th>UID</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Téléphone</th>
+                <th>Prix</th>
+                <th>QR Code</th>
+                <th>Validé ?</th>
+                <th>Date check-in</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <script>
+        function refreshTable() {
+            fetch("{% url 'live_table_data' session.id %}")
+                .then(response => response.json())
+                .then(data => {
+                    let tbody = document.querySelector("#attendee-table tbody");
+                    tbody.innerHTML = "";
+
+                    data.attendees.forEach(a => {
+                        let row = document.createElement("tr");
+                        row.className = a.checked_in ? "ok" : "no";
+                        row.innerHTML = `
+                            <td>${a.uid}</td>
+                            <td>${a.nom}</td>
+                            <td>${a.prenom}</td>
+                            <td>${a.tel}</td>
+                            <td>${a.prix}</td>
+                            <td>${a.qr_code}</td>
+                            <td>${a.checked_in ? "✔️" : "❌"}</td>
+                            <td>${a.checkin_date}</td>
+                        `;
+
+                        tbody.appendChild(row);
+                    });
+                });
+        }
+
+        setInterval(refreshTable, 2000);
+        refreshTable();
+    </script>
+
+</body>
+</html>

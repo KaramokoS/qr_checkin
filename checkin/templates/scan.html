@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 style="text-align:center;">Scanner — {{ session.name }}</h1>
+
+<!-- FULL PAGE CENTER -->
+<div style="
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    width:100%;
+    margin-top:20px;
+">
+    <!-- QR SCANNER BOX -->
+    <div id="reader" style="width:360px;"></div>
+
+    <form id="scan-form" method="POST" action="{% url 'checkin_result' session.id %}">
+      {% csrf_token %}
+      <input type="hidden" id="qr_code" name="qr_code">
+    </form>
+
+    <a href="{% url 'live_table' session_id=session.id %}" style="text-decoration:none;">
+        <button style="
+            margin-top:30px;
+            padding:12px 25px;
+            font-size:20px;
+            border-radius:8px;
+            cursor:pointer;
+        ">
+            📊 Voir le tableau (live)
+        </button>
+    </a>
+</div>
+
+<script>
+function onScanSuccess(decodedText) {
+    document.getElementById('qr_code').value = decodedText;
+    document.getElementById('scan-form').submit();
+}
+
+const html5QrCode = new Html5Qrcode("reader");
+html5QrCode.start(
+    { facingMode: "environment" },
+    { fps: 8, qrbox: 250 },
+    onScanSuccess
+);
+</script>
+
+{% endblock %}

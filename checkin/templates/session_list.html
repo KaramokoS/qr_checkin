@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Sessions</h1>
+<ul>
+  {% for s in sessions %}
+    <li>
+      <strong>{{ s.name }}</strong>
+      - créé le {{ s.created_at|date:"d/m/Y H:i" }}
+      - {% if s.is_closed %} <em>fermée</em> {% else %} <em>ouverte</em> {% endif %}
+      <br/>
+      <a href="{% url 'scan_qr' s.id %}">Scanner (public)</a> |
+      <!-- <a href="{% url 'session_admin' s.id %}">Tableau / admin</a> -->
+      <a href="{% url 'admin:checkin_checkinsession_change' s.id %}">Tableau / admin</a>
+    </li>
+  {% empty %}
+    <li>Aucune session</li>
+  {% endfor %}
+</ul>
+{% endblock %}
