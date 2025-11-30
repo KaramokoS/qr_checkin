@@ -9,7 +9,6 @@
       - {% if s.is_closed %} <em>fermée</em> {% else %} <em>ouverte</em> {% endif %}
       <br/>
       <a href="{% url 'scan_qr' s.id %}">Scanner (public)</a> |
-      <!-- <a href="{% url 'session_admin' s.id %}">Tableau / admin</a> -->
       <a href="{% url 'admin:checkin_checkinsession_change' s.id %}">Tableau / admin</a>
     </li>
   {% empty %}

@@ -7,6 +7,18 @@ from django.utils import timezone
 from django.views.decorators.http import require_POST
 from .models import CheckInSession, Attendee
 
+def home(request):
+    if request.method == "POST":
+        uid = request.POST.get("session_uid").strip()
+
+        try:
+            session = CheckInSession.objects.get(name=uid)
+            return redirect('scan_qr', session_id=session.id)
+        except CheckInSession.DoesNotExist:
+            return render(request, "home.html", {"error": "UID introuvable."})
+
+    return render(request, "home.html")
+
 def session_list(request):
     sessions = CheckInSession.objects.order_by('-created_at')
     return render(request, 'session_list.html', {'sessions': sessions})

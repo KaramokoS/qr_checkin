@@ -2,7 +2,8 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path('', views.session_list, name='session_list'),                     # choisir / créer session
+    # path('', views.session_list, name='session_list'),                     # choisir / créer session
+    path('', views.home, name='home'),  # page d'accueil
     path('session/create/', views.create_session, name='create_session'),  # create + upload CSV
     path('scan/<int:session_id>/', views.scan_qr, name='scan_qr'),        # scanner page (public)
     path('result/<int:session_id>/', views.checkin_result, name='checkin_result'),

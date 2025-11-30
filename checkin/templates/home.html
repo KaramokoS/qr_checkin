@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Check-In</title>
+
+    <style>
+        /* ---- GLOBAL ---- */
+        body {
+            font-family: "Inter", Arial, sans-serif;
+            margin: 0;
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: white;
+        }
+
+        /* ---- CONTAINER ---- */
+        .container {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 35px 28px;
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+            backdrop-filter: blur(14px);
+            text-align: center;
+
+            animation: fadeIn 0.7s ease-out;
+        }
+
+        /* Animation d'apparition */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---- TITRE ---- */
+        h1 {
+            margin: 0 0 25px 0;
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* ---- INPUT ---- */
+        input {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            outline: none;
+            font-size: 17px;
+
+            background: rgba(255,255,255,0.8);
+            transition: 0.2s;
+        }
+
+        input:focus {
+            background: white;
+            transform: scale(1.02);
+        }
+
+        /* ---- BUTTON ---- */
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 18px;
+            border: none;
+            border-radius: 12px;
+            background: #00e676;
+            background: linear-gradient(135deg, #00e676, #00c853);
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 230, 118, 0.4);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* ---- ERROR MESSAGE ---- */
+        .error {
+            background: rgba(255,0,0,0.28);
+            padding: 12px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            font-size: 16px;
+            font-weight: 500;
+            backdrop-filter: blur(4px);
+        }
+
+        /* ---- RESPONSIVE ---- */
+        @media (max-width: 480px) {
+            .container {
+                padding: 28px 22px;
+            }
+            h1 {
+                font-size: 26px;
+            }
+            button, input {
+                font-size: 16px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1>QR Check-In</h1>
+
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <input type="text"
+               name="session_uid"
+               placeholder="UID de la session"
+               required />
+
+        <button type="submit">Accéder au scanner</button>
+    </form>
+
+</div>
+
+</body>
+</html>
