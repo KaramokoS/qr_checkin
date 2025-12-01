@@ -1,17 +1,17 @@
-asgiref @ file:///work/buildout/croot/asgiref_1761946762083/work
-channels @ file:///home/conda/feedstock_root/build_artifacts/channels_1754069007000/work
-channels_redis @ file:///home/conda/feedstock_root/build_artifacts/channels_redis_1753214611056/work
-dj-database-url==3.0.1
-Django @ file:///home/conda/feedstock_root/build_artifacts/django_1762777100038/work
-gunicorn==23.0.0
-html5lib @ file:///home/conda/feedstock_root/build_artifacts/html5lib_1734075161666/work
-msgpack @ file:///work/buildout/croot/msgpack-python_1759955592267/work
-packaging==25.0
-psycopg2-binary==2.9.11
-python-decouple==3.8
-redis @ file:///work/buildout/croot/redis-py_1759966213684/work
-six @ file:///work/buildout/croot/six_1759952127748/work
-sqlparse @ file:///work/buildout/croot/sqlparse_1759958169381/work
-tomli @ file:///work/buildout/croot/tomli_1759953856752/work
-webencodings @ file:///work/buildout/croot/webencodings_1761937128504/work
-whitenoise==6.11.0
+asgiref>=3.8
+channels>=4.0
+channels-redis>=4.2
+dj-database-url>=2.1
+Django>=4.2
+gunicorn>=23.0
+html5lib>=1.1
+msgpack>=1.0
+packaging>=25.0
+psycopg2-binary>=2.9
+python-decouple>=3.8
+redis>=5.0
+six>=1.16
+sqlparse>=0.5
+tomli>=2.0
+webencodings>=0.5
+whitenoise>=6.0
