@@ -8,7 +8,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = config("SECRET_KEY", default="unsafe-secret-key")
 
 DEBUG = True
-ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "qr-validator-841fcc7940ac.herokuapp.com",]
 HEROKU_APP = config("HEROKU_APP", default=None)
 if HEROKU_APP:
     ALLOWED_HOSTS.append(f"{HEROKU_APP}.herokuapp.com")
