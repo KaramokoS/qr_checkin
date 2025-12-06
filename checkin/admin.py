@@ -41,9 +41,20 @@ class CheckInSessionAdmin(admin.ModelAdmin):
                         "checkin_date": None
                     }
                 )
+class AttendeeForm(forms.ModelForm):
+    class Meta:
+        model = Attendee
+        fields = "__all__"
+
+    def clean_prix(self):
+        value = self.cleaned_data.get("prix")
+        if value in ("", None):
+            return None
+        return value
 
 @admin.register(Attendee)
 class AttendeeAdmin(admin.ModelAdmin):
     list_display = ("uid", "qr_code", "checked_in", "checkin_date", "session")
     list_filter = ("session", "checked_in")
     search_fields = ("uid", "qr_code")
+    form = AttendeeForm

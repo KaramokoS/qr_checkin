@@ -16,18 +16,6 @@ class CheckInSession(models.Model):
         return f"{self.name} ({'closed' if self.is_closed else 'open'})"
     
 
-# class Attendee(models.Model):
-#     session = models.ForeignKey(CheckInSession, on_delete=models.CASCADE, null=True, blank=True)
-#     uid = models.CharField(max_length=200)
-#     qr_code = models.CharField(max_length=200)
-#     checked_in = models.BooleanField(default=False)
-#     checkin_date = models.DateTimeField(null=True, blank=True)
-
-#     class Meta:
-#         unique_together = ('session', 'qr_code')
-
-#     def __str__(self):
-#         return f"{self.uid} @ {self.session}"
 
 class Attendee(models.Model):
     session = models.ForeignKey(CheckInSession, on_delete=models.CASCADE, null=True, blank=True)
