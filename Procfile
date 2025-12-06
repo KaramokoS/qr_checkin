@@ -1,1 +1,1 @@
-web: gunicorn qrcheckin_project.wsgi --log-file -
+web: gunicorn qrcheckin.wsgi --log-file -
